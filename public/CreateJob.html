@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Api</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <form class="form contact-form">
+        <h5>Create Job</h5>
+        <div class="form-row">
+          <label for="Company" class="form-label">Company</label>
+          <input type="text" class="form-input Company-input" />
+        </div>
+        <!-- email -->
+        <div class="form-row">
+          <label for="Position" class="form-label">Position</label>
+          <input type="text" class="form-input Position-input" />
+        </div>
+
+       
+        <div class="text-small form-alert">there was an error</div>
+        <div class="success"></div>
+        <button type="submit" class="btn btn-block" id="findJob">submit</button>
+      </form>
+
+
+     <div class="box">
+        <div hidden class="pop">
+            <p class="date"><span id="JobDateApply">July 2 2020</span></p>
+            <div class="content">
+                <p id="PositionName">Front-End</p>
+                <span class="apple" id="companyName">apple</span>
+                <div class="flex">
+                    <div>
+                        <!-- <button onclick="Edit()">Edit</button> -->
+                        <button style="color: red;">Delete</button>
+                    </div>
+                    <div class="pending">
+                        <button disabled style="color: blueviolet;" id="status">Pending</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="AllJobs">
+            <button class="btn" id="AllJob">View All Apply Jobs</button>
+          </div>
+
+     </div>
+
+    
+    
+    </main>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+
+        findJob=document.getElementById('findJob')
+       
+
+       
+
+        findJob.addEventListener('click', async (e)=>{
+            e.preventDefault()
+            const company = document.querySelector('.Company-input').value
+            const position= document.querySelector('.Position-input').value
+            const success= document.querySelector('.success')
+            const pop= document.querySelector('.pop')
+
+            /* Pop up User job apply */
+            companyName= document.getElementById('companyName')
+            PositionName= document.getElementById('PositionName')
+            JobDateApply= document.getElementById('JobDateApply')
+            status= document.getElementById('status')
+               /* Pop up User job apply End*/
+
+          
+            try {
+                const {data} = await axios.post('/api/v1/job', {company, position})
+                success.innerHTML=data.success
+                 const Jobdata = data.Job
+                console.log(Jobdata)
+                companyName.innerHTML = Jobdata.company;
+                 PositionName.innerHTML = Jobdata.position;
+                 JobDateApply.innerHTML = Jobdata.createdAt;
+                 status.innerHTML = Jobdata.status;
+                 pop.hidden=false
+                
+                    success.innerHTML=''
+               
+            } catch (error) {
+                console.log(error)
+            }
+        })
+
+          /* Get all Job Button */
+          AllJob=document.getElementById('AllJob')
+          AllJob.addEventListener('click', async(e)=>{
+          location.replace('./Alljobs.html')
+        })
+         /* Get all Job Button End*/        
+    </script>
+    <script src="./browser-app.js"></script>
+  </body>
+</html>

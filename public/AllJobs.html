@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css" />
+
+</head>
+<body>
+<button id="ok">okok</button>
+    <p>You have apply for <span id="length"></span> jobs</p>
+    <div class="allJob">
+        <!-- <button ></button> -->
+    </div>
+    <p  id="noItem"></p>
+    <div class="EditPop"></div>
+
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+    integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+    <script>
+       let get
+
+        allJob=document.querySelector('.allJob')
+        length=document.getElementById('length')
+        noItem=document.getElementById('noItem')
+        const getAllJons = async()=>{
+            const results = await axios.get('api/v1/job')
+            try {
+                // console.log(results.data)
+                length.innerHTML = results.data.count
+
+                results.data.jobs.forEach(element => {
+                    
+                    // console.log(element)
+                    // results.data.length >= 1 ? 
+                    if (results.data.jobs) {
+                   allJob.innerHTML+=`
+                    <div class="pop">
+                <p class="date"><span id="JobDateApply">${element.createdAt}</span></p>
+                <div class="content">
+                    <p id="PositionName">${element.position}</p>
+                    <span class="apple" id="companyName">${element.company}</span>
+                    <div class="flex">
+                    <div>
+                        <button data-id='${element._id}' class="edit">Edit</button>
+                        <button data-id='${element._id}' class='delete' style="color: red;">Delete</button>
+                    </div>
+                    <div class="pending">
+                        <button disabled style="color: blueviolet;" id="status">${element.status}</button>
+                    </div>
+                </div>
+            </div>
+          </div>`
+        }else{
+            noItem.innerHTML='No Item to fetch' 
+        }
+    });
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getAllJons()
+
+       
+      
+      
+    </script>
+    <script src="./browser-app.js"></script>
+</body>
+</html>
